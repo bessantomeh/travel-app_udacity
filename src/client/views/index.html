@@ -7,15 +7,14 @@
   <link rel="stylesheet" href="../styles/style.scss">
 </head>
 <body>
-  <div>
-    <input type="text" id="zip" placeholder="Enter City">
-    <input type="text" id="feelings" placeholder="How are you feeling today?">
-    <button id="generate">Generate</button>
-  </div>
-  <div id="weather-info">
-    <p id="temperature"></p>
-    <p id="date"></p>
-    <p id="user-response"></p>
+  <h1>City Information</h1>
+  <input type="text" id="city" placeholder="Enter city name">
+  <button id="generate">Get City Info</button>
+  
+  <div id="results">
+      <p id="latitude"></p>
+      <p id="longitude"></p>
+      <p id="country"></p>
   </div>
   <script src="../js/app.js"></script>
 </body>
