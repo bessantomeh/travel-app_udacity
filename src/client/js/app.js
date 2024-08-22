@@ -1,4 +1,4 @@
-const username = 'bessan'; // Your GeoNames username
+const username = 'bessan'; 
 const baseURL = 'http://api.geonames.org/searchJSON?q=';
 
 const getCityData = async (city) => {
@@ -29,10 +29,11 @@ document.getElementById('generate').addEventListener('click', async () => {
             const longitude = firstResult.lng;
             const country = firstResult.countryName;
 
-            // Output the data to the UI
             document.getElementById('latitude').innerText = `Latitude: ${latitude}`;
             document.getElementById('longitude').innerText = `Longitude: ${longitude}`;
             document.getElementById('country').innerText = `Country: ${country}`;
+
+            updateCountdown();
         } else {
             console.error('No data found for the city');
         }
@@ -40,3 +41,25 @@ document.getElementById('generate').addEventListener('click', async () => {
         console.error('Please enter a city');
     }
 });
+
+const updateCountdown = () => {
+    const tripDate = document.getElementById('trip-date').value; 
+
+    if (tripDate) {
+        const currentDate = new Date();
+        const selectedDate = new Date(tripDate);
+        const timeDifference = selectedDate - currentDate; 
+
+        const daysUntilTrip = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+        if (daysUntilTrip >= 0) {
+            document.getElementById('countdown').innerText = `Days until your trip: ${daysUntilTrip}`;
+        } else {
+            document.getElementById('countdown').innerText = 'Your trip date has already passed.';
+        }
+
+        localStorage.setItem('tripDate', tripDate);
+    } else {
+        document.getElementById('countdown').innerText = 'Please select a trip date.';
+    }
+};

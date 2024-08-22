@@ -3,19 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Travel app</title>
+  <title>Travel App</title>
   <link rel="stylesheet" href="../styles/style.scss">
 </head>
 <body>
   <h1>City Information</h1>
+  
   <input type="text" id="city" placeholder="Enter city name">
+  <input type="date" id="trip-date"> 
   <button id="generate">Get City Info</button>
   
   <div id="results">
       <p id="latitude"></p>
       <p id="longitude"></p>
       <p id="country"></p>
+      <p id="countdown"></p> 
   </div>
+  
   <script src="../js/app.js"></script>
 </body>
 </html>
