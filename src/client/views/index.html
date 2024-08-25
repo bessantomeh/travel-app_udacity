@@ -7,19 +7,43 @@
   <link rel="stylesheet" href="../styles/style.scss">
 </head>
 <body>
-  <h1>City Information</h1>
-  
-  <input type="text" id="city" placeholder="Enter city name">
-  <input type="date" id="trip-date"> 
-  <button id="generate">Get City Info</button>
-  
-  <div id="results">
-      <p id="latitude"></p>
-      <p id="longitude"></p>
-      <p id="country"></p>
-      <p id="countdown"></p> 
+  <div class="container">
+    <h1>Travel Weather App</h1>
+    <div class="input-group">
+      <input type="text" id="city" placeholder="Enter city name" required>
+      <input type="date" id="trip-date" required>
+      <input type="date" id="end-date" required>
+      <button id="generate">Generate</button>
+    </div>
+
+    <div id="countdown" class="info-text"></div>
+    <div id="trip-length" class="info-text"></div>
+
+    <div id="weather-info">
+      <h3>Weather Information</h3>
+      <div id="latitude" class="info-text"></div>
+      <div id="longitude" class="info-text"></div>
+      <div id="country" class="info-text"></div>
+      <div id="temperature" class="info-text"></div>
+      <div id="weather-description" class="info-text"></div>
+      <div id="forecast" class="forecast"></div>
+      <img id="image" alt="City Image" />
+    </div>
   </div>
-  
+
   <script src="../js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch(error => {
+                    console.log('Service Worker registration failed:', error);
+                });
+        });
+    }
+  </script>
 </body>
 </html>

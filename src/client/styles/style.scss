@@ -1,50 +1,89 @@
-/* Reset some default styles */
+// تعريف المتغيرات
+$primary-color: #007bff;
+$hover-color: #0056b3;
+$background-color: #f0f0f0;
+$text-color: #333;
+$container-bg: #fff;
+$box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+// Reset some default styles
 body, h1, p, input, button {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
-  
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    color: #333;
+}
+body {
+  background-color: blue;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: $background-color;
+    color: $text-color;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-  }
-  
-  div {
-    background-color: #fff;
+}
+
+.container {
+    background-color: $container-bg;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: $box-shadow;
     text-align: center;
-  }
-  
-  input, button {
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  button {
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  #weather-info {
-    margin-top: 20px;
-  }
-  
-  #weather-info p {
-    margin-bottom: 10px;
-  }
-  
+    width: 90%; // يجعل العرض مرنًا
+    max-width: 600px; // يحدد أقصى عرض
+
+    h1 {
+        margin-bottom: 20px;
+        font-size: 1.8em; // يجعل العنوان أكبر
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column; // ترتيب المدخلات عموديًا
+        align-items: center; // محاذاة المدخلات في المنتصف
+
+        input {
+            padding: 10px;
+            margin: 10px 0; // هامش بين المدخلات
+            width: calc(100% - 20px); // عرض المدخلات ليكون متناسبًا
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: $primary-color;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s; // تأثير على تغيير لون الخلفية
+
+            &:hover {
+                background-color: $hover-color;
+            }
+        }
+    }
+
+    .info-text {
+        margin: 10px 0; // مساحة إضافية بين معلومات الطقس
+    }
+
+    #weather-info {
+        margin-top: 20px;
+
+        #forecast {
+            margin-top: 10px; // مساحة بين معلومات الطقس والتوقعات
+        }
+
+        #image {
+            width: 300px; // عرض الصورة
+            height: auto; // للحفاظ على النسبة
+            margin-top: 20px;
+            border-radius: 5px; // زوايا دائرية للصورة
+        }
+    }
+}
