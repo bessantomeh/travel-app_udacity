@@ -1,74 +1,14 @@
-# Front End Nanodegree Program
+Travel Planner App
+Project Overview
+The Travel Planner App is a web application that helps users plan their trips by providing essential information about their travel destination. Users can input a city and receive details about the weather forecast, an image of the city, and the length of their trip. The app integrates multiple APIs to fetch data, including GeoNames for geographical information, Weatherbit for weather forecasts, and Pixabay for city images.
 
-General Front End Nanodegree Content Resources
-
-## Table of Contents
-
-* [Repo](#repo)
-* [Projects](#projects)
-* [Lessons](#lessons)
-* [Tools](#tools)
-* [Creators](#creators)
-
-## Repo
-
-Inside the repo you'll find the following folders used to organize resources for FEND. Each lesson folder is composed of **assets**, **concepts**, **keynotes**, and an optional **problem set**.
-
-```
-fend/
-└── lessons/
-     ├── L0
-     ├── L1
-     ├── L2
-     │    ├── assets
-     │    ├── concepts
-     │    ├── keynotes
-     │    └── problem-set
-     ├── L3
-     ├── L4
-     └── ...
-```
-
-## Projects
-
-The following is a list of current projects required to complete the Front End Nanodegree.
-
-1. [Mockup to Article](https://github.com/udacity/frontend-mockup-to-article)
-2. [Animal Trading Cards](https://github.com/udacity/fend-animal-trading-cards)
-3. Build a Portfolio Site
-4. [Online Resume](https://github.com/udacity/frontend-nanodegree-resume)
-5. [Classic Arcade Game Clone](https://github.com/udacity/frontend-nanodegree-arcade-game)
-6. [Website Optimization](https://github.com/udacity/frontend-nanodegree-mobile-portfolio)
-7. Neighborhood Map
-8. [Feed Reader Testing](http://github.com/udacity/frontend-nanodegree-feedreader)
-
-## Lessons
-
-The following is a list of the lessons associated with the Front End Nanodegree.
-
-* L0 - Establishing a Web Developer Mindset
-* L1 - Nanodegree Orientation
-* L2 - HTML Syntax
-* L3 - CSS Syntax
-* L4 - How to Write Code Faster
-* L5 - Box Model and Semantic Elements
-
-## Tools
-
-The following is a list of tools used thoroughout the Front End Nanodegree.
-
-* [Chrome Feedback Extension](http://labs.udacity.com/udacity-feedback-extension/)
-* [JavaScript Grader](https://github.com/udacity/js-grader)
-* [Nanodegree Style Guide](http://udacity.github.io/frontend-nanodegree-styleguide/)
-
-## Creators
-
-**Cameron Pittman**
-
-* <https://twitter.com/cwpittman>
-* <https://github.com/cameronwp>
-
-**James Parkes**
-
-* <https://twitter.com/parkesrjames>
-* <https://github.com/jamesparkes>
+Features
+City Data Retrieval: Fetches latitude, longitude, and country name based on the city input.
+Weather Forecast: Provides a 7-day weather forecast for the selected city.
+City Image: Displays a relevant image of the city.
+Trip Countdown: Shows the number of days until the trip starts.
+Trip Length Calculation: Calculates and displays the duration of the trip in days.
+APIs Used
+GeoNames API: Retrieves geographical information based on the city name.
+Weatherbit API: Provides weather forecasts for the given latitude and longitude.
+Pixabay API: Fetches images related to the city name.

@@ -1,55 +1,53 @@
 import '../styles/style.scss';
 
+// API keys and base URLs
 const geonamesUsername = 'bessan'; 
 const geonamesBaseURL = 'http://api.geonames.org/searchJSON?q=';
 const weatherbitApiKey = 'f2d47f64cd9e4dcda7e0908916a0e4d9'; 
 const pixabayApiKey = '45574350-2452279639fe29c4c202ee714';
 
-const getCityData = async (city) => {
+// Helper function to handle fetch responses
+const handleFetchResponse = async (response) => {
+    if (response.ok) {
+        return await response.json();
+    } else {
+        const errorData = await response.json();
+        throw new Error(`Error ${response.status}: ${errorData.message}`);
+    }
+};
+
+// Fetch city data from GeoNames API
+export const getCityData = async (city) => {
     const url = `${geonamesBaseURL}${city}&maxRows=10&username=${geonamesUsername}`;
     try {
         const response = await fetch(url);
-        if (response.ok) {
-            const data = await response.json();
-            return data;
-        } else {
-            const errorData = await response.json();
-            throw new Error(`Error ${response.status}: ${errorData.message}`);
-        }
+        return await handleFetchResponse(response);
     } catch (error) {
         console.error('Error:', error);
     }
 };
 
-const getWeatherData = async (latitude, longitude) => {
+// Fetch weather data from Weatherbit API
+export const getWeatherData = async (latitude, longitude) => {
     const url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${latitude}&lon=${longitude}&key=${weatherbitApiKey}`;
     try {
         const response = await fetch(url);
-        if (response.ok) {
-            const data = await response.json();
-            return data;  // بيانات الطقس المستقبلية
-        } else {
-            const errorData = await response.json();
-            throw new Error(`Error ${response.status}: ${errorData.message}`);
-        }
+        return await handleFetchResponse(response);
     } catch (error) {
         console.error('Error:', error);
     }
 };
 
-const getImage = async (city) => {
+// Fetch city image from Pixabay API
+export const getImage = async (city) => {
     const url = `https://pixabay.com/api/?key=${pixabayApiKey}&q=${encodeURIComponent(city)}&image_type=photo`;
     try {
         const response = await fetch(url);
-        if (response.ok) {
-            const data = await response.json();
-            if (data.hits && data.hits.length > 0) {
-                return data.hits[0].webformatURL; 
-            } else {
-                throw new Error('No images found');
-            }
+        const data = await handleFetchResponse(response);
+        if (data.hits && data.hits.length > 0) {
+            return data.hits[0].webformatURL; 
         } else {
-            throw new Error('Error fetching images');
+            throw new Error('No images found');
         }
     } catch (error) {
         console.error('Error:', error);
@@ -57,17 +55,17 @@ const getImage = async (city) => {
     }
 };
 
+// Update weather information on the UI
 const updateWeatherInfo = (weatherData) => {
     const temperatureElement = document.getElementById('temperature');
     const descriptionElement = document.getElementById('weather-description');
     const forecastElement = document.getElementById('forecast');
 
     if (weatherData && weatherData.data && weatherData.data.length > 0) {
-        const todayForecast = weatherData.data[0]; // بيانات الطقس لليوم الأول
+        const todayForecast = weatherData.data[0]; 
         temperatureElement.innerText = `Temperature: ${todayForecast.temp} °C`;
         descriptionElement.innerText = `Description: ${todayForecast.weather.description}`;
         
-        // عرض توقعات الأيام القادمة
         forecastElement.innerHTML = '<h4>Upcoming Forecast:</h4>';
         weatherData.data.forEach(day => {
             const forecastItem = document.createElement('div');
@@ -79,6 +77,7 @@ const updateWeatherInfo = (weatherData) => {
     }
 };
 
+// Calculate and display the length of the trip
 const calculateTripLength = () => {
     const tripDate = new Date(document.getElementById('trip-date').value); 
     const endDate = new Date(document.getElementById('end-date').value); 
@@ -86,7 +85,7 @@ const calculateTripLength = () => {
 
     if (tripDate && endDate) {
         const timeDiff = endDate - tripDate;
-        const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Convert milliseconds to days
+        const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
 
         if (daysDiff > 0) {
             tripLengthElement.innerText = `Length of trip: ${daysDiff} days`;
@@ -98,6 +97,7 @@ const calculateTripLength = () => {
     }
 };
 
+// Event listener for the "Generate" button click
 document.getElementById('generate').addEventListener('click', async () => {
     const city = document.getElementById('city').value;
 
@@ -116,7 +116,7 @@ document.getElementById('generate').addEventListener('click', async () => {
 
             const weatherData = await getWeatherData(latitude, longitude);
             if (weatherData) {
-                updateWeatherInfo(weatherData); // استدعاء الدالة لتحديث واجهة المستخدم
+                updateWeatherInfo(weatherData); 
             }
 
             const cityImageUrl = await getImage(city);
@@ -132,7 +132,6 @@ document.getElementById('generate').addEventListener('click', async () => {
                 console.error('Image element not found');
             }
 
-            // تحديث طول الرحلة بعد الحصول على البيانات
             calculateTripLength(); 
         } else {
             console.error('No data found for the city');
@@ -142,7 +141,8 @@ document.getElementById('generate').addEventListener('click', async () => {
     }
 });
 
-const updateCountdown = () => {
+// Update countdown for the trip
+export const updateCountdown = () => {
     const tripDate = document.getElementById('trip-date').value; 
 
     if (tripDate) {
@@ -162,4 +162,9 @@ const updateCountdown = () => {
     } else {
         document.getElementById('countdown').innerText = 'Please select a trip date.';
     }
+};
+
+// Main function to initialize the app
+export const mainFunction = () => {
+    console.log('App initialized.');
 };
