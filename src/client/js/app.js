@@ -2,9 +2,10 @@ import '../styles/style.scss';
 
 // API keys and base URLs
 const geonamesUsername = 'bessan'; 
-const geonamesBaseURL = 'http://api.geonames.org/searchJSON?q=';
-const weatherbitApiKey = 'f2d47f64cd9e4dcda7e0908916a0e4d9'; 
+const weatherbitApiKey = 'f2d47f64cd9e4dcda7e0908916a0e4d9';
 const pixabayApiKey = '45574350-2452279639fe29c4c202ee714';
+
+const geonamesBaseURL = 'http://api.geonames.org/searchJSON?q=';
 
 // Helper function to handle fetch responses
 const handleFetchResponse = async (response) => {
@@ -28,8 +29,8 @@ export const getCityData = async (city) => {
 };
 
 // Fetch weather data from Weatherbit API
-export const getWeatherData = async (latitude, longitude) => {
-    const url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${latitude}&lon=${longitude}&key=${weatherbitApiKey}`;
+export const getWeatherData = async (latitude, longitude, startDate, endDate) => {
+    const url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${latitude}&lon=${longitude}&key=${weatherbitApiKey}&start_date=${startDate}&end_date=${endDate}`;
     try {
         const response = await fetch(url);
         return await handleFetchResponse(response);
@@ -56,21 +57,28 @@ export const getImage = async (city) => {
 };
 
 // Update weather information on the UI
-const updateWeatherInfo = (weatherData) => {
+const updateWeatherInfo = (weatherData, startDate, endDate) => {
     const temperatureElement = document.getElementById('temperature');
     const descriptionElement = document.getElementById('weather-description');
     const forecastElement = document.getElementById('forecast');
 
+    // تحويل التواريخ المدخلة من المستخدم إلى كائنات Date
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
     if (weatherData && weatherData.data && weatherData.data.length > 0) {
-        const todayForecast = weatherData.data[0]; 
-        temperatureElement.innerText = `Temperature: ${todayForecast.temp} °C`;
-        descriptionElement.innerText = `Description: ${todayForecast.weather.description}`;
+        temperatureElement.innerText = `Temperature Forecast:`;
         
-        forecastElement.innerHTML = '<h4>Upcoming Forecast:</h4>';
+        forecastElement.innerHTML = '<h4>Forecast for your trip:</h4>';
         weatherData.data.forEach(day => {
-            const forecastItem = document.createElement('div');
-            forecastItem.innerText = `Date: ${day.valid_date} - Temp: ${day.temp} °C - Description: ${day.weather.description}`;
-            forecastElement.appendChild(forecastItem);
+            const forecastDate = new Date(day.valid_date);
+
+            // التحقق من أن تاريخ التوقع يقع ضمن النطاق المطلوب
+            if (forecastDate >= start && forecastDate <= end) {
+                const forecastItem = document.createElement('div');
+                forecastItem.innerText = `Date: ${day.valid_date} - Temp: ${day.temp} °C - Description: ${day.weather.description}`;
+                forecastElement.appendChild(forecastItem);
+            }
         });
     } else {
         console.error('No weather data found');
@@ -98,48 +106,53 @@ const calculateTripLength = () => {
 };
 
 // Event listener for the "Generate" button click
-document.getElementById('generate').addEventListener('click', async () => {
-    const city = document.getElementById('city').value;
+const init = () => {
+    document.getElementById('generate').addEventListener('click', async () => {
+        const city = document.getElementById('city').value;
+        const tripDate = document.getElementById('trip-date').value;
+        const endDate = document.getElementById('end-date').value;
 
-    if (city) {
-        const cityData = await getCityData(city);
-        
-        if (cityData && cityData.geonames && cityData.geonames.length > 0) {
-            const firstResult = cityData.geonames[0];
-            const latitude = firstResult.lat;
-            const longitude = firstResult.lng;
-            const country = firstResult.countryName;
+        if (city && tripDate && endDate) {
+            const cityData = await getCityData(city);
+            
+            if (cityData && cityData.geonames && cityData.geonames.length > 0) {
+                const firstResult = cityData.geonames[0];
+                const latitude = firstResult.lat;
+                const longitude = firstResult.lng;
+                const country = firstResult.countryName;
 
-            document.getElementById('latitude').innerText = `Latitude: ${latitude}`;
-            document.getElementById('longitude').innerText = `Longitude: ${longitude}`;
-            document.getElementById('country').innerText = `Country: ${country}`;
+                document.getElementById('latitude').innerText = `Latitude: ${latitude}`;
+                document.getElementById('longitude').innerText = `Longitude: ${longitude}`;
+                document.getElementById('country').innerText = `Country: ${country}`;
 
-            const weatherData = await getWeatherData(latitude, longitude);
-            if (weatherData) {
-                updateWeatherInfo(weatherData); 
-            }
-
-            const cityImageUrl = await getImage(city);
-            const imageElement = document.getElementById('image');
-
-            if (imageElement) {
-                if (cityImageUrl) {
-                    imageElement.src = cityImageUrl; 
-                } else {
-                    console.error('No image found for the city');
+                // Pass trip start and end dates to getWeatherData
+                const weatherData = await getWeatherData(latitude, longitude, tripDate, endDate);
+                if (weatherData) {
+                    updateWeatherInfo(weatherData, tripDate, endDate); // تمرير التواريخ هنا
                 }
-            } else {
-                console.error('Image element not found');
-            }
 
-            calculateTripLength(); 
+                const cityImageUrl = await getImage(city);
+                const imageElement = document.getElementById('image');
+
+                if (imageElement) {
+                    if (cityImageUrl) {
+                        imageElement.src = cityImageUrl; 
+                    } else {
+                        console.error('No image found for the city');
+                    }
+                } else {
+                    console.error('Image element not found');
+                }
+
+                calculateTripLength(); 
+            } else {
+                console.error('No data found for the city');
+            }
         } else {
-            console.error('No data found for the city');
+            console.error('Please enter a city and select trip dates.');
         }
-    } else {
-        console.error('Please enter a city');
-    }
-});
+    });
+};
 
 // Update countdown for the trip
 export const updateCountdown = () => {
@@ -164,7 +177,18 @@ export const updateCountdown = () => {
     }
 };
 
+document.addEventListener('DOMContentLoaded', () => {
+    updateCountdown();
+});
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+        .then(() => console.log('Service Worker registered'))
+        .catch(error => console.error('Service Worker registration failed:', error));
+}
+
 // Main function to initialize the app
 export const mainFunction = () => {
     console.log('App initialized.');
+    init(); // Initialize event listeners
 };

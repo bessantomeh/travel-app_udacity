@@ -2,8 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
+const http = require('http'); 
 
 const app = express();
+const server = http.createServer(app); 
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -12,7 +14,7 @@ app.use(express.static('website'));
 
 const port = 8081;
 
-app.listen(port, () => {
+server.listen(port, () => { 
     console.log(`Server running on localhost:${port}`);
 });
 
@@ -30,3 +32,8 @@ app.post('/addData', (req, res) => {
     };
     res.send({ success: true, data: projectData });
 });
+app.get('/', (req, res) => {
+    res.sendFile(path.resolve('dist/index.html')); 
+});
+
+module.exports = server;
