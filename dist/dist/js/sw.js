@@ -1,0 +1,1 @@
+const CACHE_NAME="my-cache-v1",urlsToCache=["/","/index.html","/styles/style.css","/js/app.js"];self.addEventListener("install",(e=>{e.waitUntil(caches.open(CACHE_NAME).then((e=>e.addAll(urlsToCache))))})),self.addEventListener("fetch",(e=>{e.respondWith(caches.match(e.request).then((s=>s||fetch(e.request))))}));

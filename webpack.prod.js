@@ -2,6 +2,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     mode: 'production',
@@ -41,5 +42,10 @@ module.exports = {
             filename: './index.html',
         }),
         new CleanWebpackPlugin(),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: 'src/client/js/sw.js', to: 'dist/js/' }
+            ],
+            }),
     ],
 };
